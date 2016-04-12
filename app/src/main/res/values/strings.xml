@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">OHAP Client 009</string>
+    <string name="action_settings">Settings</string>
+    <string name="path"></string>
+    <string name="central_unit_url_from_user">Central unit URL</string>
+    <string name="enter_central_unit_url">Enter url to connect to Central Unit</string>
+</resources>

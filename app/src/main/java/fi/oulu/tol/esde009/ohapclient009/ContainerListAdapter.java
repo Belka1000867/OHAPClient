@@ -1,0 +1,125 @@
+package fi.oulu.tol.esde009.ohapclient009;
+
+import android.content.Context;
+import android.database.DataSetObserver;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.TextView;
+
+import com.opimobi.ohap.Container;
+
+/**
+ * Created by bel on 01.04.16.
+ */
+public class ContainerListAdapter implements ListAdapter {
+
+    private static final String DEBUG_TAG = "TestListAdapter";
+    private Container container;
+
+    public ContainerListAdapter(Container container) {
+        this.container = container;
+    }
+
+    @Override
+    public boolean areAllItemsEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return true;
+    }
+
+    @Override
+    public void registerDataSetObserver(DataSetObserver observer) {
+
+    }
+
+    @Override
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+
+    }
+
+    @Override
+    public int getCount() {
+        Log.d(DEBUG_TAG, "getCount()");
+        return container.getItemCount();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        Log.d(DEBUG_TAG, "getItem()");
+        return container.getItemByIndex(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        Log.d(DEBUG_TAG, "getItemId()");
+        return container.getItemByIndex(position).getId();
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        Log.d(DEBUG_TAG, "hasStableIds()");
+        return true;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Log.d(DEBUG_TAG, "getView()" + position);
+
+        ViewHolder viewHolder;
+
+        if(convertView == null){
+            Context context = parent.getContext();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.row_item, parent, false);
+
+
+            /*
+            * Create instance of internal class and find views by existing IDs from row_item.xml
+            * and take parameters of that existing views
+            * */
+            viewHolder = new ViewHolder();
+            viewHolder.tv_deviceName = (TextView)convertView.findViewById(R.id.tv_deviceName);
+            viewHolder.tv_deviceDescription = (TextView) convertView.findViewById(R.id.tv_deviceDescription);
+            convertView.setTag(viewHolder);
+        }
+        else
+            viewHolder = (ViewHolder)convertView.getTag();
+
+        String deviceName = "Device name: " + container.getItemByIndex(position).getName();
+        String deviceDescription = "Device description: " + container.getItemByIndex(position).getDescription();
+
+        viewHolder.tv_deviceName.setText(deviceName);
+        viewHolder.tv_deviceDescription.setText(deviceDescription);
+
+        return convertView;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Log.d(DEBUG_TAG, "getItemViewType()");
+        return 0;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        Log.d(DEBUG_TAG, "getViewTypeCount()");
+        return 1;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    private static class ViewHolder {
+        public TextView tv_deviceName;
+        public TextView tv_deviceDescription;
+
+    }
+}
