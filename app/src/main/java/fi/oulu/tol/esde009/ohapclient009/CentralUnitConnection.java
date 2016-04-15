@@ -26,7 +26,7 @@ public class CentralUnitConnection extends CentralUnit {
         Log.d(DEBUG_TAG, "CentralUnitConnection()");
 
         setName("Central Unit 009");
-        setDescription("Main Central Unit in the system.");
+        setDescription("Main Central Unit in the system");
 
         Log.d(DEBUG_TAG, "Container hall");
         Container hall = new Container(this, getUniqueId());
@@ -35,21 +35,31 @@ public class CentralUnitConnection extends CentralUnit {
         this.itemAddedEventSource.fireEvent(hall);
 
         Log.d(DEBUG_TAG, "Device lampDevice");
-        Device lampDevice = new Device(hall, this.getItemCount() + hall.getItemCount()+1, Device.Type.ACTUATOR, Device.ValueType.BINARY);
+        Device lampDevice = new Device(hall, this.getItemCount() + hall.getItemCount()+1, Device.Type.ACTUATOR, Device.ValueType.DECIMAL);
         lampDevice.setName("Ceiling Lamp");
-        lampDevice.setDescription("Device to manipulate light.");
-        lampDevice.setBinaryValue(true);
-        //itemRegisteredEventSource.fireEvent(lampDevice);
+        lampDevice.setDescription("Device to manipulate light");
+        lampDevice.setCategory(Device.LIGHT);
+        lampDevice.setMinMaxValues(0,100);
+        lampDevice.setDecimalValue(50);
         hall.itemAddedEventSource.fireEvent(lampDevice);
 
         Log.d(DEBUG_TAG, "Device windowDevice");
         Device windowDevice = new Device(hall, this.getItemCount() + hall.getItemCount()+1, Device.Type.ACTUATOR, Device.ValueType.DECIMAL);
         windowDevice.setName("Windows Jalousie");
-        windowDevice.setDescription("Device to manipulate jalousie openness.");
+        windowDevice.setDescription("Device to manipulate jalousie openness");
+        windowDevice.setCategory(Device.JEALOUSE);
         windowDevice.setMinMaxValues(0, 100);
-        windowDevice.setDecimalValue(50);
-        //itemRegisteredEventSource.fireEvent(windowDevice);
+        windowDevice.setDecimalValue(windowDevice.getMaxValue()/2);
         hall.itemAddedEventSource.fireEvent(windowDevice);
+
+        Log.d(DEBUG_TAG, "Device windowDevice");
+        Device heatingDevice = new Device(hall, this.getItemCount() + hall.getItemCount()+1, Device.Type.ACTUATOR, Device.ValueType.DECIMAL);
+        heatingDevice.setName("Heating system");
+        heatingDevice.setDescription("Device to manipulate temperature");
+        heatingDevice.setCategory(Device.HEATING);
+        heatingDevice.setMinMaxValues(0, 100);
+        heatingDevice.setDecimalValue(50);
+        hall.itemAddedEventSource.fireEvent(heatingDevice);
 
     }
 

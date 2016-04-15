@@ -1,31 +1,36 @@
 package fi.oulu.tol.esde009.ohapclient009;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import com.opimobi.ohap.CentralUnit;
 import com.opimobi.ohap.Device;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import fi.oulu.tol.esde009.ohapclient009.ui.Light;
+
 public class DeviceActivity extends AppCompatActivity {
 
+    private static final String TAG = "Debug_DeviceActivity";
     public static final String EXTRA_CENTRAL_UNIT_URL = "fi.oulu.tol.009.CENTRAL_UNIT_URL";
     public static final String EXTRA_DEVICE_ID = "fi.oulu.tol.009.DEVICE_ID";
 
-    CentralUnitConnection centralUnitConnection;
-    Device device;
+    private RelativeLayout uiRelativeLayout;
+    private LayoutInflater mLayoutInflater;
+
+    private Device mDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +39,11 @@ public class DeviceActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        /*
+        * Layout for UI inflater
+        * */
+        uiRelativeLayout = (RelativeLayout) findViewById(R.id.rellayout_device_control);
+        mLayoutInflater = getLayoutInflater();
 
         /*
         * Get URL connection string EXTRA from new intention of the class
@@ -62,43 +64,126 @@ public class DeviceActivity extends AppCompatActivity {
         * Initialize connection with central unit
         * */
         try {
-            centralUnitConnection = new CentralUnitConnection(new URL(urlConnection));
+            CentralUnitConnection centralUnitConnection = new CentralUnitConnection(new URL(urlConnection));
             /*
-            * Get registered device that user click from central unit
+            * Get registered mDevice that user click from central unit
             * */
-            device = (Device) centralUnitConnection.getItemById(Integer.parseInt(deviceId));
+            mDevice = (Device) centralUnitConnection.getItemById(Integer.parseInt(deviceId));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
+
         /*
-        * Take visuals from device activity layout
+        * Take visuals from mDevice activity layout
         * */
         TextView textView_path = (TextView) findViewById(R.id.textView_path);
         TextView textView_name = (TextView) findViewById(R.id.textView_name);
         TextView textView_description = (TextView) findViewById(R.id.textView_description);
-        Switch switch_value = (Switch) findViewById(R.id.switch_value);
-        SeekBar seekBar_value = (SeekBar) findViewById(R.id.seekBar_value);
-        EditText editText_decimal = (EditText) findViewById(R.id.editText_decimal);
+        ImageView imageView_Picture = (ImageView) findViewById(R.id.device_picture);
+        //Switch switch_value = (Switch) findViewById(R.id.switch_value);
+        //SeekBar seekBar_value = (SeekBar) findViewById(R.id.seekBar_value);
+        //EditText editText_decimal = (EditText) findViewById(R.id.editText_decimal);
 
         /*
-        * Initialize device information in the ACTIVITY
-        * set Title of an activity as device name
+        * Initialize mDevice information in the ACTIVITY
+        * set Title of an activity as mDevice name
         * */
-        setTitle(device.getName());
+        setTitle(mDevice.getName());
         
-        textView_path.setText(device.getParent().toString());
-        textView_name.setText(device.getName());
-        textView_description.setText(device.getDescription());
-        switch_value.setChecked(device.getBinaryValue());
+        textView_path.setText(mDevice.getParent().getName());
+        textView_name.setText(mDevice.getName());
+        textView_description.setText(mDevice.getDescription());
+
+        switch (mDevice.getCategory()){
+            case Device.LIGHT :
+                imageView_Picture.setImageResource(R.mipmap.oc_light);
+                createUiLight();
+                break;
+            case Device.HEATING :
+                imageView_Picture.setImageResource(R.mipmap.ic_heating);
+                createUiHeating();
+                break;
+            case Device.JEALOUSE :
+                imageView_Picture.setImageResource(R.mipmap.oc_jealouse);
+                createUiJalousie();
+                break;
+        }
+
+        //switch_value.setChecked(mDevice.getBinaryValue());
         /*
         * Hide and deactivate Seek Bar
         * */
-        seekBar_value.setVisibility(View.GONE);
+        //seekBar_value.setVisibility(View.GONE);
 
-        editText_decimal.setText("" + device.getDecimalValue());
+        //editText_decimal.setText("" + mDevice.getDecimalValue());
     }
 
+
+
+    private  void createUiLight(){
+
+        Light lightUiClass = new Light(this, mDevice, mLayoutInflater, uiRelativeLayout);
+        lightUiClass.realizeUi();
+    }
+
+    private void createUiHeating() {
+        mLayoutInflater.inflate(R.layout.ui_heating, uiRelativeLayout, true);
+
+        Button bLightOn = (Button) findViewById(R.id.button_on);
+        Button bLightOff = (Button) findViewById(R.id.button_off);
+        final SeekBar sbLightChange = (SeekBar) findViewById(R.id.sb_value_change);
+        final TextView tvLightValue = (TextView) findViewById(R.id.tv_value);
+
+        tvLightValue.setText(mDevice.getDecimalValue() + "\u2103");
+        sbLightChange.setProgress((int) mDevice.getDecimalValue());
+
+        bLightOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDevice.setDecimalValue(mDevice.getMaxValue());
+                sbLightChange.setProgress(sbLightChange.getMax());
+                tvLightValue.setText(""+ mDevice.getDecimalValue() + R.string.celsius);
+            }
+        });
+
+        bLightOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDevice.setDecimalValue(mDevice.getMinValue());
+                sbLightChange.setProgress(0);
+                tvLightValue.setText(""+ mDevice.getDecimalValue() + R.string.celsius);
+            }
+        });
+
+        sbLightChange.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            int lightValueInt;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                lightValueInt = progress;
+                tvLightValue.setText(progress + "%");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                Log.d(TAG, "onStartTrackingTouch()" + lightValueInt);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Log.d(TAG, "onStopTrackingTouch" + lightValueInt);
+                mDevice.setDecimalValue(lightValueInt);
+            }
+        });
+    }
+    
+    private void createUiJalousie() {
+        mLayoutInflater.inflate(R.layout.ui_jalousie, uiRelativeLayout, true);
+    }
+    
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -120,4 +205,5 @@ public class DeviceActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    
 }

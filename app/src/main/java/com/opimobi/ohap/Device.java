@@ -20,6 +20,24 @@ package com.opimobi.ohap;
  * @version 1.1
  */
 public class Device extends Item {
+
+    /*
+    * What device is actually working for
+    * */
+    public static final int LIGHT = 1;
+    public static final int HEATING = 2;
+    public static final int JEALOUSE = 3;
+
+    public int category = 0;
+
+    public void setCategory(int category) {
+        this.category = category;
+    }
+
+    public int getCategory() {
+        return category;
+    }
+
     /**
      * The possible types of a device.
      */

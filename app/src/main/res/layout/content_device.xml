@@ -12,12 +12,33 @@
     tools:context="fi.oulu.tol.esde009.ohapclient009.DeviceActivity"
     tools:showIn="@layout/activity_device">
 
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/device_picture"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="25dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/linear_device_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/device_picture"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentBottom="false">
+
     <TextView
         android:id="@+id/textView_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
+        android:layout_marginTop="16dp"
         android:text="Container hierarchy above the device"/>
 
     <TextView
@@ -26,6 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:layout_marginTop="16dp"
         android:text="User visible name of the device"
         />
 
@@ -35,27 +57,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:layout_marginTop="16dp"
         android:text="User visible description of the device"/>
 
-    <EditText
-        android:id="@+id/editText_decimal"
-        android:layout_above="@+id/switch_value"
+    </LinearLayout>
+
+    <!--    <EditText
+            android:id="@+id/editText_decimal"
+            android:layout_above="@+id/switch_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Switch
+            android:id="@+id/switch_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
+
+
+        <SeekBar
+            android:id="@+id/seekBar_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            />-->
+
+    <RelativeLayout
+        android:id="@+id/rellayout_device_control"
+        android:layout_below="@+id/linear_device_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-    <Switch
-        android:id="@+id/switch_value"
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" />
-
-
-    <SeekBar
-        android:id="@+id/seekBar_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        />
+    </RelativeLayout>
 
 </RelativeLayout>

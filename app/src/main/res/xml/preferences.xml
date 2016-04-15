@@ -5,9 +5,10 @@
             android:title="@string/central_unit_url_from_user"
             android:text="@string/enter_central_unit_url"
             android:key="central_unit_url"
-            android:defaultValue="true">
-
-        </EditTextPreference>
+            android:summary="The url to connect central unit"
+            android:defaultValue=""/>
+    </PreferenceCategory>
+    <PreferenceCategory>
 
     </PreferenceCategory>
 
