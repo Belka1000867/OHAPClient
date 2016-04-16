@@ -39,7 +39,7 @@ public class CentralUnitConnection extends CentralUnit {
         lampDevice.setName("Ceiling Lamp");
         lampDevice.setDescription("Device to manipulate light");
         lampDevice.setCategory(Device.LIGHT);
-        lampDevice.setMinMaxValues(0,100);
+        lampDevice.setMinMaxValues(0, 100);
         lampDevice.setDecimalValue(50);
         hall.itemAddedEventSource.fireEvent(lampDevice);
 
@@ -49,7 +49,7 @@ public class CentralUnitConnection extends CentralUnit {
         windowDevice.setDescription("Device to manipulate jalousie openness");
         windowDevice.setCategory(Device.JEALOUSE);
         windowDevice.setMinMaxValues(0, 100);
-        windowDevice.setDecimalValue(windowDevice.getMaxValue()/2);
+        windowDevice.setDecimalValue(windowDevice.getMaxValue() / 2);
         hall.itemAddedEventSource.fireEvent(windowDevice);
 
         Log.d(DEBUG_TAG, "Device windowDevice");
@@ -60,6 +60,13 @@ public class CentralUnitConnection extends CentralUnit {
         heatingDevice.setMinMaxValues(0, 100);
         heatingDevice.setDecimalValue(50);
         hall.itemAddedEventSource.fireEvent(heatingDevice);
+
+        Device oxygenSensorDevice = new Device(hall, this.getItemCount() + hall.getItemCount()+1, Device.Type.SENSOR, Device.ValueType.DECIMAL);
+        oxygenSensorDevice.setName("Oxygen balance");
+        oxygenSensorDevice.setDescription("Oxygen monitoring");
+        oxygenSensorDevice.setMinMaxValues(0, 100);
+        oxygenSensorDevice.setDecimalValue(40);
+        hall.itemAddedEventSource.fireEvent(oxygenSensorDevice);
 
     }
 

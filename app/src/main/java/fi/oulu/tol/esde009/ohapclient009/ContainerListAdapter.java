@@ -22,7 +22,7 @@ import com.opimobi.ohap.Item;
  */
 public class ContainerListAdapter implements ListAdapter {
 
-    private static final String DEBUG_TAG = "TestListAdapter";
+    private static final String DEBUG_TAG = "ContainerListAdapter";
     private Container container;
 
     public ContainerListAdapter(Container container) {
@@ -92,18 +92,20 @@ public class ContainerListAdapter implements ListAdapter {
             viewHolder.layout_row = (LinearLayout)convertView.findViewById(R.id.layout_row);
             viewHolder.tv_deviceName = (TextView)convertView.findViewById(R.id.tv_deviceName);
             viewHolder.tv_deviceDescription = (TextView) convertView.findViewById(R.id.tv_deviceDescription);
+            viewHolder.tv_contents = (TextView) convertView.findViewById(R.id.tv_contents);
             convertView.setTag(viewHolder);
         }
         else
             viewHolder = (ViewHolder)convertView.getTag();
 
         Item whatItem = container.getItemByIndex(position);
-        if(whatItem instanceof Container){
-            viewHolder.layout_row.setBackgroundColor(Color.CYAN);
-        }
-        else if (whatItem instanceof Device)
+        if (whatItem instanceof Device)
         {
-            viewHolder.layout_row.setBackgroundColor(Color.GREEN);
+            if(((Device) whatItem).getType() == Device.Type.ACTUATOR)
+                viewHolder.layout_row.setBackgroundColor(Color.GREEN);
+            else
+                viewHolder.layout_row.setBackgroundColor(Color.GRAY);
+
             switch(((Device) whatItem).getCategory())
             {
                 case Device.LIGHT :
@@ -117,8 +119,11 @@ public class ContainerListAdapter implements ListAdapter {
                     break;
             }
         }
-
-
+        else
+        {
+            Log.d(DEBUG_TAG, "getView() Container : " + ((Container)whatItem).getItemCount() );
+            viewHolder.tv_contents.setText(((Container) whatItem).getItemCount() + "");
+        }
 
         String deviceName = container.getItemByIndex(position).getName();
         String deviceDescription = container.getItemByIndex(position).getDescription();
@@ -151,6 +156,6 @@ public class ContainerListAdapter implements ListAdapter {
         public ImageView iv_image;
         public TextView tv_deviceName;
         public TextView tv_deviceDescription;
-
+        public TextView tv_contents;
     }
 }
