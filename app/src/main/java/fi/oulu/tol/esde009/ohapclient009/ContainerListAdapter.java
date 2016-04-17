@@ -26,7 +26,8 @@ public class ContainerListAdapter implements ListAdapter {
     private Container container;
 
     public ContainerListAdapter(Container container) {
-        this.container = container;
+        if(container != null)
+            this.container = container;
     }
 
     @Override

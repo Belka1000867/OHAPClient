@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory>
         <EditTextPreference
+            android:id="@+id/edf_central_unit_url"
             android:title="@string/central_unit_url_from_user"
             android:text="@string/enter_central_unit_url"
             android:key="central_unit_url"
             android:summary="The url to connect central unit"
-            android:defaultValue=""/>
-    </PreferenceCategory>
-    <PreferenceCategory>
-
-    </PreferenceCategory>
+            android:defaultValue="@string/central_unit_def_value" />
 
 </PreferenceScreen>

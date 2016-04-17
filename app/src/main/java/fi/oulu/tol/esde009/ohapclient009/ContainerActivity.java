@@ -1,22 +1,18 @@
 package fi.oulu.tol.esde009.ohapclient009;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.opimobi.ohap.CentralUnit;
 import com.opimobi.ohap.Container;
-import com.opimobi.ohap.Device;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,6 +28,9 @@ public class ContainerActivity extends AppCompatActivity {
     private CentralUnitConnection centralUnitConnection;
     private Container container;
 
+    private String extraCentralUnitUrl;
+    private String centralUnitUrlPref;
+
     private static String DEBUG_TAG = "Debug_ContainerActivity";
 
     @Override
@@ -39,16 +38,37 @@ public class ContainerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
 
+        //
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         /*
         Get EXTRA central unit url from new intent of the class
         */
-        String extraCentralUnitUrl = getIntent().getStringExtra(EXTRA_CENTRAL_UNIT_URL);
+         extraCentralUnitUrl = getIntent().getStringExtra(EXTRA_CENTRAL_UNIT_URL);
 
+        /*
+        * Get url of the central unit from the settings
+        * */
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        centralUnitUrlPref = sharedPreferences.getString("central_unit_url", "");
+        Log.d(DEBUG_TAG, "Url from preferences: " + centralUnitUrlPref);
+
+        if(centralUnitUrlPref.isEmpty()){
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        }
+        else {
+            establishConnection();
+        }
+
+    }
+
+    private void establishConnection(){
         /*
         For the first instantiation of the class Intent will not be used and extraCentralUnitUrl will be null
         Than need to get URL from preferences
         */
-        final String centralUnitUrl = extraCentralUnitUrl != null ? extraCentralUnitUrl : getCentralUnitUrl();
+        final String centralUnitUrl = extraCentralUnitUrl != null ? extraCentralUnitUrl : centralUnitUrlPref;
         Log.d(DEBUG_TAG, "centralUnitUrl  " + centralUnitUrl);
 
         try {
@@ -76,34 +96,35 @@ public class ContainerActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-
         ListView listView = (ListView) findViewById(R.id.listView_test);
         final ContainerListAdapter containerListAdapter = new ContainerListAdapter(container);
 
-        listView.setAdapter(containerListAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent;
-                /*
-                * If selected item is not a container launch Device Activity
-                * */
-                if (containerListAdapter.getItem(position) instanceof Container){
-                    intent = new Intent(ContainerActivity.this, ContainerActivity.class);
-                    intent.putExtra(EXTRA_CENTRAL_UNIT_URL, centralUnitUrl);
-                    intent.putExtra(EXTRA_CONTAINER_ID, containerListAdapter.getItemId(position)+"");
-                }
-                else
-                {
-                    intent = new Intent(ContainerActivity.this, DeviceActivity.class);
-                    intent.putExtra(DeviceActivity.EXTRA_CENTRAL_UNIT_URL, centralUnitUrl);
-                    intent.putExtra(DeviceActivity.EXTRA_DEVICE_ID, containerListAdapter.getItemId(position)+"");
-                }
+        try {
+            listView.setAdapter(containerListAdapter);
 
-                startActivity(intent);
-            }
-        });
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent;
+                    /*
+                    * If selected item is not a container launch Device Activity
+                    * */
+                    if (containerListAdapter.getItem(position) instanceof Container) {
+                        intent = new Intent(ContainerActivity.this, ContainerActivity.class);
+                        intent.putExtra(EXTRA_CENTRAL_UNIT_URL, centralUnitUrl);
+                        intent.putExtra(EXTRA_CONTAINER_ID, containerListAdapter.getItemId(position) + "");
+                    } else {
+                        intent = new Intent(ContainerActivity.this, DeviceActivity.class);
+                        intent.putExtra(DeviceActivity.EXTRA_CENTRAL_UNIT_URL, centralUnitUrl);
+                        intent.putExtra(DeviceActivity.EXTRA_DEVICE_ID, containerListAdapter.getItemId(position) + "");
+                    }
+
+                    startActivity(intent);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -122,16 +143,11 @@ public class ContainerActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
             case R.id.action_settings:
-               Intent settingActivity = new Intent(getBaseContext(), Settings.class);
+               Intent settingActivity = new Intent(getBaseContext(), SettingsActivity.class);
                 startActivity(settingActivity);
                 break;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    //get Central Unit URl from user preferences
-    private String getCentralUnitUrl(){
-        return "http://ohap.opimobi.com:8080/";
     }
 }

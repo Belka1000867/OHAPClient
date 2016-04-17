@@ -5,4 +5,5 @@
     <string name="central_unit_url_from_user">Central unit URL</string>
     <string name="enter_central_unit_url">Enter url to connect to Central Unit</string>
     <string name="celsius">\u2103</string>
+    <string name="central_unit_def_value">http://ohap.opimobi.com:8080/</string>
 </resources>

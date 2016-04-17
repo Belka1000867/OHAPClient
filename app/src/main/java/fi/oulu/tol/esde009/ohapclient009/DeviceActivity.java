@@ -1,6 +1,9 @@
 package fi.oulu.tol.esde009.ohapclient009;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,14 +48,27 @@ public class DeviceActivity extends AppCompatActivity {
         uiRelativeLayout = (RelativeLayout) findViewById(R.id.rellayout_device_control);
         mLayoutInflater = getLayoutInflater();
 
+
+        /*
+        * Get url of the central unit from the settings
+        * */
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String centralUnitUrl = sharedPreferences.getString("central_unit_url", "");
+
+        if(centralUnitUrl.isEmpty()){
+            Intent intent = new Intent(this, SettingsFragment.class);
+            startActivity(intent);
+        }
+
         /*
         * Get URL connection string EXTRA from new intention of the class
         * */
         String extraUrlConnection = getIntent().getStringExtra(EXTRA_CENTRAL_UNIT_URL);
         /*
         * For the first time EXTRA will be null, as there is no Intent and URL should be taken from preferences
+        * should be something like this "http://ohap.opimobi.com:8080/"
         * */
-        final String urlConnection = extraUrlConnection != null ? extraUrlConnection : "http://ohap.opimobi.com:8080/";
+        final String urlConnection = extraUrlConnection != null ? extraUrlConnection : centralUnitUrl;
 
         /*
         * Get ID string EXTRA from new intention
@@ -81,9 +97,6 @@ public class DeviceActivity extends AppCompatActivity {
         TextView textView_name = (TextView) findViewById(R.id.textView_name);
         TextView textView_description = (TextView) findViewById(R.id.textView_description);
         ImageView imageView_Picture = (ImageView) findViewById(R.id.device_picture);
-        //Switch switch_value = (Switch) findViewById(R.id.switch_value);
-        //SeekBar seekBar_value = (SeekBar) findViewById(R.id.seekBar_value);
-        //EditText editText_decimal = (EditText) findViewById(R.id.editText_decimal);
 
         /*
         * Initialize mDevice information in the ACTIVITY
