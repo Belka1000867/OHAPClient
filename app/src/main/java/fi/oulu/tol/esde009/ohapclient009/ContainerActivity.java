@@ -33,6 +33,9 @@ public class ContainerActivity extends AppCompatActivity {
 
     private static String DEBUG_TAG = "Debug_ContainerActivity";
 
+    private SharedPreferences sharedPreferences;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +52,8 @@ public class ContainerActivity extends AppCompatActivity {
         /*
         * Get url of the central unit from the settings
         * */
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        centralUnitUrlPref = sharedPreferences.getString("central_unit_url", "");
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        centralUnitUrlPref = sharedPreferences.getString(SettingsFragment.CENTRAL_UNIT_UTL, "");
         Log.d(DEBUG_TAG, "Url from preferences: " + centralUnitUrlPref);
 
         if(centralUnitUrlPref.isEmpty()){
