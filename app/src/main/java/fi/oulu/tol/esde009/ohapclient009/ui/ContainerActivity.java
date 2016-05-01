@@ -1,4 +1,4 @@
-package fi.oulu.tol.esde009.ohapclient009;
+package fi.oulu.tol.esde009.ohapclient009.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +17,12 @@ import com.opimobi.ohap.Container;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import fi.oulu.tol.esde009.ohapclient009.networking.CentralUnitConnection;
+import fi.oulu.tol.esde009.ohapclient009.utils.ContainerListAdapter;
+import fi.oulu.tol.esde009.ohapclient009.R;
+import fi.oulu.tol.esde009.ohapclient009.ui.Settings.SettingsActivity;
+import fi.oulu.tol.esde009.ohapclient009.ui.Settings.SettingsFragment;
+
 /**
  * Created by bel on 01.04.16.
  */
@@ -33,17 +39,12 @@ public class ContainerActivity extends AppCompatActivity {
 
     private static String DEBUG_TAG = "Debug_ContainerActivity";
 
-    private SharedPreferences sharedPreferences;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
-
-        //
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
+        //set the preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         /*
         Get EXTRA central unit url from new intent of the class
         */
@@ -52,7 +53,6 @@ public class ContainerActivity extends AppCompatActivity {
         /*
         * Get url of the central unit from the settings
         * */
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         centralUnitUrlPref = sharedPreferences.getString(SettingsFragment.CENTRAL_UNIT_UTL, "");
         Log.d(DEBUG_TAG, "Url from preferences: " + centralUnitUrlPref);
 
@@ -142,7 +142,6 @@ public class ContainerActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
 
         switch (item.getItemId()){
             case R.id.action_settings:

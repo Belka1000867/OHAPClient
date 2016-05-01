@@ -1,4 +1,4 @@
-package fi.oulu.tol.esde009.ohapclient009;
+package fi.oulu.tol.esde009.ohapclient009.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,7 +22,9 @@ import com.opimobi.ohap.Device;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import fi.oulu.tol.esde009.ohapclient009.ui.Light;
+import fi.oulu.tol.esde009.ohapclient009.networking.CentralUnitConnection;
+import fi.oulu.tol.esde009.ohapclient009.R;
+import fi.oulu.tol.esde009.ohapclient009.ui.Settings.SettingsFragment;
 
 public class DeviceActivity extends AppCompatActivity {
 
@@ -134,7 +136,7 @@ public class DeviceActivity extends AppCompatActivity {
 
 
 
-    private  void createUiLight(){
+    private void createUiLight(){
 
         Light lightUiClass = new Light(this, mDevice, mLayoutInflater, uiRelativeLayout);
         lightUiClass.realizeUi();

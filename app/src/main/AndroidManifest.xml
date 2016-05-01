@@ -9,13 +9,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".DeviceActivity"
+            android:name=".ui.DeviceActivity"
             android:label="Celling Lamp"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
-            android:name=".ContainerActivity"
+            android:name=".ui.ContainerActivity"
             android:label="OHAP Client 009">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +24,7 @@
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".ui.Settings.SettingsActivity"
             android:label="Settings">
         </activity>
 

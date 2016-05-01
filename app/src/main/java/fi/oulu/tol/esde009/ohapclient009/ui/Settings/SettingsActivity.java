@@ -1,10 +1,7 @@
-package fi.oulu.tol.esde009.ohapclient009;
+package fi.oulu.tol.esde009.ohapclient009.ui.Settings;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.util.Log;
 
 /**
  * Created by bel on 17.04.16.

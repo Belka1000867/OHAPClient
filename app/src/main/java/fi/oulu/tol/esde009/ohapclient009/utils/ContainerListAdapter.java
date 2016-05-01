@@ -1,4 +1,4 @@
-package fi.oulu.tol.esde009.ohapclient009;
+package fi.oulu.tol.esde009.ohapclient009.utils;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.opimobi.ohap.Container;
 import com.opimobi.ohap.Device;
 import com.opimobi.ohap.Item;
+
+import fi.oulu.tol.esde009.ohapclient009.R;
 
 /**
  * Created by bel on 01.04.16.

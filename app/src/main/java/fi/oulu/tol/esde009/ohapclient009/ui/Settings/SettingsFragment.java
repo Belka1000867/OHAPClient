@@ -1,4 +1,4 @@
-package fi.oulu.tol.esde009.ohapclient009;
+package fi.oulu.tol.esde009.ohapclient009.ui.Settings;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
+
+import fi.oulu.tol.esde009.ohapclient009.R;
 
 /**
  * Created by bel on 12.04.16.
