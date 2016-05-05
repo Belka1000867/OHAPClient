@@ -25,7 +25,7 @@ import java.util.Iterator;
  */
 public class Container extends Item {
 
-    private static String DEBUG_TAG = "Debug_OHAP_Container";
+    private static String DEBUG_TAG = "OHAP_Container";
 
     /**
      * The event source for item added events. The listeners of this source will be called

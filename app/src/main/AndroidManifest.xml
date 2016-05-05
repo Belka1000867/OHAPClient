@@ -15,17 +15,12 @@
         </activity>
 
         <activity
-            android:name=".ui.ContainerActivity"
+            android:name=".ui.activities.ContainerActivity_"
             android:label="OHAP Client 009">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.Settings.SettingsActivity"
-            android:label="Settings">
         </activity>
 
 

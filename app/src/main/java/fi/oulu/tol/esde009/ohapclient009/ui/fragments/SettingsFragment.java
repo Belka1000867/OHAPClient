@@ -1,38 +1,41 @@
-package fi.oulu.tol.esde009.ohapclient009.ui.Settings;
+package fi.oulu.tol.esde009.ohapclient009.ui.fragments;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
 
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.PreferenceScreen;
+
 import fi.oulu.tol.esde009.ohapclient009.R;
+import fi.oulu.tol.esde009.ohapclient009.ui.activities.ContainerActivity_;
 
 /**
- * Created by bel on 12.04.16.
+ * Preferences with annotations
  */
-public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+@PreferenceScreen(R.xml.preferences)
+@EFragment
+public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private final static String TAG = "Debug_SettingsFragment";
 
-    public final static String CENTRAL_UNIT_UTL = "central_unit_url";
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
-
-    }
+    public final static String CENTRAL_UNIT_URL = "central_unit_url";
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "onSharedPreferencesChanged()");
-        if (key.equals(CENTRAL_UNIT_UTL)) {
+        if (key.equals(CENTRAL_UNIT_URL)) {
             Preference preference = findPreference(key);
             // Set summary to be the user-description for the selected value
             preference.setSummary(sharedPreferences.getString(key, ""));
             Log.d(TAG, "Preference summary :" + preference.getSummary() + "");
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container_fragment, new ContainerFragment_(), "ContainerList")
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
@@ -48,5 +51,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         super.onPause();
         getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
     }
 }

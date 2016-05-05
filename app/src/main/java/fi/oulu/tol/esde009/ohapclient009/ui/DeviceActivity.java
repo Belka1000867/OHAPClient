@@ -24,7 +24,7 @@ import java.net.URL;
 
 import fi.oulu.tol.esde009.ohapclient009.networking.CentralUnitConnection;
 import fi.oulu.tol.esde009.ohapclient009.R;
-import fi.oulu.tol.esde009.ohapclient009.ui.Settings.SettingsFragment;
+import fi.oulu.tol.esde009.ohapclient009.ui.fragments.SettingsFragment;
 
 public class DeviceActivity extends AppCompatActivity {
 
@@ -78,26 +78,21 @@ public class DeviceActivity extends AppCompatActivity {
         * */
         String deviceId = getIntent().getStringExtra(EXTRA_DEVICE_ID);
 
+
+
         /*
-        * Initialize connection with central unit
-        * */
-        try {
-            CentralUnitConnection centralUnitConnection = new CentralUnitConnection(new URL(urlConnection));
-            /*
-            * Get registered mDevice that user click from central unit
-            * */
-            mDevice = (Device) centralUnitConnection.getItemById(Integer.parseInt(deviceId));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+         * Get registered mDevice that user click from central unit
+         * */
+        mDevice = (Device) CentralUnitConnection.getInstance().getItemById(Integer.parseInt(deviceId));
+
 
 
         /*
         * Take visuals from mDevice activity layout
         * */
-        TextView textView_path = (TextView) findViewById(R.id.textView_path);
-        TextView textView_name = (TextView) findViewById(R.id.textView_name);
-        TextView textView_description = (TextView) findViewById(R.id.textView_description);
+//        TextView textView_path = (TextView) findViewById(R.id.textView_path);
+//        TextView textView_name = (TextView) findViewById(R.id.textView_name);
+//        TextView textView_description = (TextView) findViewById(R.id.textView_description);
         ImageView imageView_Picture = (ImageView) findViewById(R.id.device_picture);
 
         /*
@@ -106,9 +101,9 @@ public class DeviceActivity extends AppCompatActivity {
         * */
         setTitle(mDevice.getName());
         
-        textView_path.setText(mDevice.getParent().getName());
-        textView_name.setText(mDevice.getName());
-        textView_description.setText(mDevice.getDescription());
+//        textView_path.setText(mDevice.getParent().getName());
+//        textView_name.setText(mDevice.getName());
+//        textView_description.setText(mDevice.getDescription());
 
         switch (mDevice.getCategory()){
             case Device.LIGHT :
@@ -137,7 +132,6 @@ public class DeviceActivity extends AppCompatActivity {
 
 
     private void createUiLight(){
-
         Light lightUiClass = new Light(this, mDevice, mLayoutInflater, uiRelativeLayout);
         lightUiClass.realizeUi();
     }

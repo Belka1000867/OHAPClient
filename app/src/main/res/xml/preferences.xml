@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    >
     <PreferenceCategory
-        android:title="Application values">
+        android:title="Application values"
+        >
+
         <EditTextPreference
             android:id="@+id/edf_central_unit_url"
             android:title="@string/central_unit_url_from_user"
             android:text="@string/enter_central_unit_url"
             android:key="central_unit_url"
             android:summary="The url to connect central unit"
-            android:defaultValue="@string/central_unit_def_value" />
+            android:defaultValue="@string/preferences.default.server.address"
+            />
+
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Application settings">
-       <SwitchPreference
+        android:title="Application settings"
+        >
+
+       <SwitchPreferenceCompat
            android:id="@+id/sp_sensor_gravity_on_off"
            android:title="Sensor to turn device on off"
            android:text="Do you want to turn sensor on/off"
            android:key="switch_sensor_gravity"
-           android:defaultValue="true" />
+           android:defaultValue="true"
+           />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
