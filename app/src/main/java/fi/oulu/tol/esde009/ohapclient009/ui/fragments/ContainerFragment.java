@@ -1,7 +1,6 @@
 package fi.oulu.tol.esde009.ohapclient009.ui.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,14 +17,9 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
-import java.net.URL;
-
 import fi.oulu.tol.esde009.ohapclient009.R;
 import fi.oulu.tol.esde009.ohapclient009.networking.CentralUnitConnection;
 
-import fi.oulu.tol.esde009.ohapclient009.ui.activities.ContainerActivity;
-import fi.oulu.tol.esde009.ohapclient009.ui.activities.ContainerActivity_;
-import fi.oulu.tol.esde009.ohapclient009.ui.fragments.SettingsFragment;
 import fi.oulu.tol.esde009.ohapclient009.utils.AppConstants;
 import fi.oulu.tol.esde009.ohapclient009.utils.ContainerListAdapter;
 
@@ -49,7 +43,6 @@ public class ContainerFragment extends Fragment {
     private String finalCentralUnitUrl;
 
     private static String TAG = "Debug_ContainerFragment";
-
 
     //Interface to communicate with Activity
     public interface OnItemSelectedListener{
@@ -106,7 +99,7 @@ public class ContainerFragment extends Fragment {
         /*
         * Get url of the central unit from the settings
         * */
-        prefCentralUnitUrl = sharedPreferences.getString(SettingsFragment.CENTRAL_UNIT_URL, "");
+        prefCentralUnitUrl = sharedPreferences.getString(SettingsFragment.SERVER_ADDRESS, "");
 
         if(prefCentralUnitUrl.isEmpty()){
             Log.d(TAG, "URL from preferences is empty");
@@ -115,7 +108,7 @@ public class ContainerFragment extends Fragment {
                     .replace(R.id.container_fragment, new SettingsFragment_(), "Settings")
                     .addToBackStack(null)
                     .commit();
-            Toast.makeText(getActivity(), R.string.error_message_central_unit_url, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.error_message_server_address, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -134,6 +127,7 @@ public class ContainerFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         /*
         For the first instantiation of the class arguments will not be used and argCentralUnitUrl will be null
         Than need to get URL from preferences
@@ -141,20 +135,18 @@ public class ContainerFragment extends Fragment {
         finalCentralUnitUrl = argCentralUnitUrl != null ? argCentralUnitUrl : prefCentralUnitUrl;
         Log.d(TAG, "finalCentralUnitUrl  " + finalCentralUnitUrl);
 
-        try {
-            centralUnitConnection = CentralUnitConnection.getInstance();
-            Log.d(TAG, "centralUnitConnection  " + centralUnitConnection.getName());
+
+        centralUnitConnection = CentralUnitConnection.getInstance();
+        Log.d(TAG, "centralUnitConnection  " + centralUnitConnection.getName());
 
         /*
         for the first instantiation of the class Intent will not be used and ID will be null
         if id is null than it is parent container
         */
-            final Long containerId = argContainerId != null ? argContainerId : centralUnitConnection.getId();
-            mContainer = (Container) centralUnitConnection.getItemById(containerId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        final Long containerId = argContainerId != null ? argContainerId : centralUnitConnection.getId();
+        mContainer = (Container) centralUnitConnection.getItemById(containerId);
 
     }
+
+
 }

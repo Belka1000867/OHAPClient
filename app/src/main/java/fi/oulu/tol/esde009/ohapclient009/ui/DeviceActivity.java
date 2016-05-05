@@ -29,7 +29,7 @@ import fi.oulu.tol.esde009.ohapclient009.ui.fragments.SettingsFragment;
 public class DeviceActivity extends AppCompatActivity {
 
     private static final String TAG = "Debug_DeviceActivity";
-    public static final String EXTRA_CENTRAL_UNIT_URL = "fi.oulu.tol.009.CENTRAL_UNIT_URL";
+    public static final String EXTRA_CENTRAL_UNIT_URL = "fi.oulu.tol.009.SERVER_ADDRESS";
     public static final String EXTRA_DEVICE_ID = "fi.oulu.tol.009.DEVICE_ID";
 
     private RelativeLayout uiRelativeLayout;
@@ -84,7 +84,6 @@ public class DeviceActivity extends AppCompatActivity {
          * Get registered mDevice that user click from central unit
          * */
         mDevice = (Device) CentralUnitConnection.getInstance().getItemById(Integer.parseInt(deviceId));
-
 
 
         /*

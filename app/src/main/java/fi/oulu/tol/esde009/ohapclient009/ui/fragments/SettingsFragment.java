@@ -2,7 +2,6 @@ package fi.oulu.tol.esde009.ohapclient009.ui.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
@@ -11,7 +10,6 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.PreferenceScreen;
 
 import fi.oulu.tol.esde009.ohapclient009.R;
-import fi.oulu.tol.esde009.ohapclient009.ui.activities.ContainerActivity_;
 
 /**
  * Preferences with annotations
@@ -22,12 +20,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     private final static String TAG = "Debug_SettingsFragment";
 
-    public final static String CENTRAL_UNIT_URL = "central_unit_url";
+    public final static String SERVER_ADDRESS = "key.server.address";
+    public final static String AUTO_CONNECTION = "key.autoconnection:";
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "onSharedPreferencesChanged()");
-        if (key.equals(CENTRAL_UNIT_URL)) {
+        if (key.equals(SERVER_ADDRESS)) {
             Preference preference = findPreference(key);
             // Set summary to be the user-description for the selected value
             preference.setSummary(sharedPreferences.getString(key, ""));

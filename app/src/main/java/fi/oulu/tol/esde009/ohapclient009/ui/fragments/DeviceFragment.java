@@ -7,15 +7,11 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.opimobi.ohap.CentralUnit;
 import com.opimobi.ohap.Device;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import fi.oulu.tol.esde009.ohapclient009.R;
 import fi.oulu.tol.esde009.ohapclient009.networking.CentralUnitConnection;
@@ -55,7 +51,7 @@ public class DeviceFragment extends Fragment {
         super.onAttach(context);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String prefCentralUnitConnection = sharedPreferences.getString(SettingsFragment_.CENTRAL_UNIT_URL, "");
+        String prefCentralUnitConnection = sharedPreferences.getString(SettingsFragment_.SERVER_ADDRESS, "");
 
         String argCentralUnitConnection = getArguments().getString(AppConstants.EXTRA_CENTRAL_UNIT_URL);
         final String finalCentralUnitConnection = argCentralUnitConnection != null ? argCentralUnitConnection : prefCentralUnitConnection;

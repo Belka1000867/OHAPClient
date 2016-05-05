@@ -1,6 +1,9 @@
 package fi.oulu.tol.esde009.ohapclient009.ui.activities;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
@@ -53,7 +56,12 @@ public class ContainerActivity extends AppCompatActivity implements ContainerFra
         super.onCreate(savedInstanceState);
         Log.d(DEBUG_TAG, "onCreate()");
 
+        if(!checkNetwork()) {
+            return;
+        }
+
         mFragmentManager = getSupportFragmentManager();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         /*
         * Checking if activity have saved state in order to prevent overlapping of fragments
         */
@@ -62,8 +70,13 @@ public class ContainerActivity extends AppCompatActivity implements ContainerFra
             return;
         }
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String url = sharedPreferences.getString(SettingsFragment.CENTRAL_UNIT_URL, "");
+        String url = sharedPreferences.getString(SettingsFragment.SERVER_ADDRESS, "");
+        if(url == null || url.length() == 0){
+            openSettings();
+            handleErrorMessage(R.string.error_message_server_address);
+        }
+
+
         if (url != null && url.length() > 0) {
             try {
                 CentralUnitConnection.getInstance().initialize(new URL(url), this);
@@ -73,7 +86,6 @@ public class ContainerActivity extends AppCompatActivity implements ContainerFra
         }
         else{
             openSettings();
-            Toast.makeText(this, R.string.error_message_central_unit_url, Toast.LENGTH_LONG).show();
         }
 
         /*
@@ -90,6 +102,13 @@ public class ContainerActivity extends AppCompatActivity implements ContainerFra
     protected void onStart() {
         super.onStart();
         Log.d(DEBUG_TAG, "onStart()");
+
+        if(checkNetwork()) {
+            boolean isAutoConnection = sharedPreferences.getBoolean(SettingsFragment.AUTO_CONNECTION, true);
+            if (isAutoConnection) {
+                CentralUnitConnection.getInstance().start(this);
+            }
+        }
     }
 
     @Override
@@ -135,7 +154,7 @@ public class ContainerActivity extends AppCompatActivity implements ContainerFra
 
     @Override
     public void handleErrorMessage(int errorId) {
-
+        Toast.makeText(this, getResources().getString(errorId), Toast.LENGTH_LONG).show();
     }
 
     public void openSettings(){
@@ -144,5 +163,16 @@ public class ContainerActivity extends AppCompatActivity implements ContainerFra
                 .replace(R.id.container_fragment, new SettingsFragment_(), "Settings")
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private boolean checkNetwork() {
+        ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        }
+        Log.d(DEBUG_TAG, "No network, cannot initiate connection!");
+        handleErrorMessage(R.string.error_message_no_connection);
+        return false;
     }
 }

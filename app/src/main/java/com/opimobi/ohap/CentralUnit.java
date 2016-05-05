@@ -102,6 +102,10 @@ public abstract class CentralUnit extends Container {
         return url;
     }
 
+    public void setURL(URL ulr) {
+        this.url = url;
+    }
+
     /**
      * Notifies the central unit that the specified container has started or stopped listening.
      * When a client is listening a container, the server sends updates when items are added
@@ -142,4 +146,6 @@ public abstract class CentralUnit extends Container {
         items.remove(item.getId());
         itemUnregisteredEventSource.fireEvent(item);
     }
+
+
 }

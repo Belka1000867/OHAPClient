@@ -57,7 +57,7 @@ public class CentralUnitConnection extends CentralUnit {
     private InputStream inputStream = null;
 
     // Url of the server
-    private URL url = null;
+    //private URL url = null;
 
     // Who is notified about events related to the communication with the server, mainly about data arriving from the echo server
     private CentralUnitObserver centralUnitObserver = null;
@@ -88,10 +88,24 @@ public class CentralUnitConnection extends CentralUnit {
     }
 
     public void initialize(URL url, CentralUnitObserver centralUnitObserver)  {
-        this.url = url;
+        setURL(url);
         this.centralUnitObserver = centralUnitObserver;
     }
 
+    // Sets the observer and also starts the networking
+    public void start(CentralUnitObserver centralUnitObserver){
+        Log.d(TAG, "start()");
+        if(this.centralUnitObserver == null){
+            this.centralUnitObserver = centralUnitObserver;
+        }
+        startNetworking();
+    }
+
+    //stops the networking and sets the observer to null.
+    public void stop(){
+        Log.d(TAG, "stop()");
+        stopNetworking();
+    }
 
     @Override
     protected void changeBinaryValue(Device device, boolean value) {
@@ -239,8 +253,8 @@ public class CentralUnitConnection extends CentralUnit {
                 socket.setSoTimeout(5000);
 
                 Log.d(TAG, "Connecting socket");
-                Log.d(TAG, " Host: " + url.getHost() + " port: " + url.getPort());
-                socket.connect(new InetSocketAddress(url.getHost(), url.getPort()), 5000);
+                Log.d(TAG, " Host: " + getURL().getHost() + " port: " + getURL().getPort());
+                socket.connect(new InetSocketAddress(getURL().getHost(), getURL().getPort()), 5000);
                 Log.d(TAG, "Socket is connected");
 
                 outputStream = socket.getOutputStream();
@@ -425,12 +439,5 @@ public class CentralUnitConnection extends CentralUnit {
         lampDevice4.setDecimalValue(50);
     }
 
-    /*
-    * Getters and Setters
-    * */
-
-    public URL getUrl(){
-        return url;
-    }
 
 }

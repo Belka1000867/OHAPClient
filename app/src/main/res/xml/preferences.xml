@@ -9,10 +9,19 @@
             android:id="@+id/edf_central_unit_url"
             android:title="@string/central_unit_url_from_user"
             android:text="@string/enter_central_unit_url"
-            android:key="central_unit_url"
+            android:key="key.server.address"
             android:summary="The url to connect central unit"
             android:defaultValue="@string/preferences.default.server.address"
             />
+
+        <SwitchPreferenceCompat
+            android:id="@+id/sp_autoconnection"
+            android:title="@string/title.preferences.autoconnection"
+            android:text="@string/text.preferences.autoconnection"
+            android:key="key.autoconnection"
+            android:defaultValue="true"
+            />
+
 
     </PreferenceCategory>
 
