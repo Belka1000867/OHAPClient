@@ -7,11 +7,12 @@
 
         <EditTextPreference
             android:id="@+id/edf_central_unit_url"
-            android:title="@string/central_unit_url_from_user"
-            android:text="@string/enter_central_unit_url"
+            android:title="@string/title.preferences.server.address"
+            android:text="@string/text.preferences.server.address"
+            android:singleLine="true"
             android:key="key.server.address"
             android:summary="The url to connect central unit"
-            android:defaultValue="@string/preferences.default.server.address"
+            android:defaultValue="@string/default.preferences.server.address"
             />
 
         <SwitchPreferenceCompat

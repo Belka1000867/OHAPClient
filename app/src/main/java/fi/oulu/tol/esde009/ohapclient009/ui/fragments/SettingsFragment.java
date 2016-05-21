@@ -12,7 +12,7 @@ import org.androidannotations.annotations.PreferenceScreen;
 import fi.oulu.tol.esde009.ohapclient009.R;
 
 /**
- * Preferences with annotations
+ * Preferences with android annotations
  */
 @PreferenceScreen(R.xml.preferences)
 @EFragment
@@ -31,6 +31,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             // Set summary to be the user-description for the selected value
             preference.setSummary(sharedPreferences.getString(key, ""));
             Log.d(TAG, "Preference summary :" + preference.getSummary() + "");
+            //When server address changed - start Container Fragment and try to reconnect
             getFragmentManager().beginTransaction()
                     .replace(R.id.container_fragment, new ContainerFragment_(), "ContainerList")
                     .addToBackStack(null)
@@ -54,5 +55,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
+        Log.d(TAG, "onCreatePreferences()");
     }
 }

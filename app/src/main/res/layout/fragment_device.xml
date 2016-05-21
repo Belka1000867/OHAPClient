@@ -3,79 +3,41 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <TextView
+        android:id="@+id/textView_path"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".ui.DeviceActivity"
-        tools:showIn="@layout/activity_device">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:text="Container hierarchy above the device"
+        />
 
+    <TextView
+        android:id="@+id/textView_name"
+        android:layout_below="@+id/textView_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:text="User visible name of the device"
+        />
 
-        <ImageView
-            android:id="@+id/device_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_marginLeft="25dp"
-            />
+    <TextView
+        android:id="@+id/textView_description"
+        android:layout_below="@+id/textView_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:text="User visible description of the device"
+        />
 
-        <LinearLayout
-            android:id="@+id/linear_device_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/device_picture"
-            android:layout_alignParentStart="false"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentBottom="false"
-            android:orientation="vertical"
-            >
+    <RelativeLayout
+        android:id="@+id/relativelayout_device"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/textView_path"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="16dp"
-                android:gravity="center_horizontal"
-                android:text="Container hierarchy above the device"
-                />
-
-            <TextView
-                android:id="@+id/textView_name"
-                android:layout_below="@+id/textView_path"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center_horizontal"
-                android:text="User visible name of the device"
-                />
-
-            <TextView
-                android:id="@+id/textView_description"
-                android:layout_below="@+id/textView_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center_horizontal"
-                android:text="User visible description of the device"
-                />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/rellayout_device_control"
-            android:layout_below="@+id/linear_device_info"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </RelativeLayout>
 
     </RelativeLayout>
 

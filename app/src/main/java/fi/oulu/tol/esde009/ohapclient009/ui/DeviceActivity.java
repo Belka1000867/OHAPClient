@@ -19,10 +19,7 @@ import android.widget.TextView;
 
 import com.opimobi.ohap.Device;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import fi.oulu.tol.esde009.ohapclient009.networking.CentralUnitConnection;
+import fi.oulu.tol.esde009.ohapclient009.network.CentralUnitConnection;
 import fi.oulu.tol.esde009.ohapclient009.R;
 import fi.oulu.tol.esde009.ohapclient009.ui.fragments.SettingsFragment;
 
@@ -104,20 +101,20 @@ public class DeviceActivity extends AppCompatActivity {
 //        textView_name.setText(mDevice.getName());
 //        textView_description.setText(mDevice.getDescription());
 
-        switch (mDevice.getCategory()){
-            case Device.LIGHT :
-                imageView_Picture.setImageResource(R.mipmap.oc_light);
-                createUiLight();
-                break;
-            case Device.HEATING :
-                imageView_Picture.setImageResource(R.mipmap.ic_heating);
-                createUiHeating();
-                break;
-            case Device.JEALOUSE :
-                imageView_Picture.setImageResource(R.mipmap.oc_jealouse);
-                createUiJalousie();
-                break;
-        }
+//        switch (mDevice.getCategory()){
+//            case Device.LIGHT :
+//                imageView_Picture.setImageResource(R.mipmap.oc_light);
+//                createUiLight();
+//                break;
+//            case Device.HEATING :
+//                imageView_Picture.setImageResource(R.mipmap.ic_heating);
+//                createUiHeating();
+//                break;
+//            case Device.JEALOUSE :
+//                imageView_Picture.setImageResource(R.mipmap.oc_jealouse);
+//                createUiJalousie();
+//                break;
+//        }
 
         //switch_value.setChecked(mDevice.getBinaryValue());
         /*
@@ -151,7 +148,7 @@ public class DeviceActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mDevice.setDecimalValue(mDevice.getMaxValue());
                 sbLightChange.setProgress(sbLightChange.getMax());
-                tvLightValue.setText(""+ mDevice.getDecimalValue() + R.string.celsius);
+               // tvLightValue.setText(""+ mDevice.getDecimalValue() + R.string.celsius);
             }
         });
 
@@ -160,7 +157,7 @@ public class DeviceActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mDevice.setDecimalValue(mDevice.getMinValue());
                 sbLightChange.setProgress(0);
-                tvLightValue.setText(""+ mDevice.getDecimalValue() + R.string.celsius);
+              //  tvLightValue.setText(""+ mDevice.getDecimalValue() + R.string.celsius);
             }
         });
 

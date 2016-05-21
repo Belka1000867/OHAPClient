@@ -1,6 +1,7 @@
 package fi.oulu.tol.esde009.ohapclient009.utils;
 
 import android.content.Context;
+import android.database.DataSetObservable;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.media.Image;
@@ -15,21 +16,36 @@ import android.widget.TextView;
 
 import com.opimobi.ohap.Container;
 import com.opimobi.ohap.Device;
+import com.opimobi.ohap.EventSource;
 import com.opimobi.ohap.Item;
 
 import fi.oulu.tol.esde009.ohapclient009.R;
+import fi.oulu.tol.esde009.ohapclient009.network.CentralUnitConnection;
 
 /**
  * Created by bel on 01.04.16.
  */
-public class ContainerListAdapter implements ListAdapter {
+public class ContainerListAdapter implements ListAdapter, EventSource.Listener<Container, Item> {
 
-    private static final String DEBUG_TAG = "ContainerListAdapter";
+    private static final String DEBUG_TAG = "Debug_ListAdapter";
     private Container container;
+    private DataSetObservable dataSetObservable;
 
     public ContainerListAdapter(Container container) {
-        if(container != null)
+        Log.d(DEBUG_TAG, "ContainerListAdapter()");
+        if(container != null) {
             this.container = container;
+
+            Log.d(DEBUG_TAG, "container id : " + container.getId());
+            dataSetObservable = new DataSetObservable();
+            /*
+            *  A way to inform the ContainerListAdapter when the Container has changed,
+            *  and further the ListView that the ContainerListAdapter has changed
+            * */
+            container.itemAddedEventSource.addListener(this);
+            container.itemRemovedEventSource.addListener(this);
+//            ((CentralUnitConnection) container).initializeEventListener(this);
+        }
     }
 
     @Override
@@ -44,35 +60,43 @@ public class ContainerListAdapter implements ListAdapter {
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
-
+        Log.d(DEBUG_TAG, "registerDataSetObserver()");
+        /*
+        * DataSetObservable contains a list of registered observer that can be used when notifying on changes in the observed object.
+        * */
+        dataSetObservable.registerObserver(observer);
     }
 
     @Override
     public void unregisterDataSetObserver(DataSetObserver observer) {
+        Log.d(DEBUG_TAG, "unregisterDataSetObserver()");
+        if(observer != null)
+            dataSetObservable.unregisterObserver(observer);
 
+        //container.itemAddedEventSource.removeListener(this);
     }
 
     @Override
     public int getCount() {
-        Log.d(DEBUG_TAG, "getCount()");
+        Log.d(DEBUG_TAG, "getCount() count is : " + container.getItemCount());
         return container.getItemCount();
     }
 
     @Override
     public Object getItem(int position) {
-        Log.d(DEBUG_TAG, "getItem()");
+        //Log.d(DEBUG_TAG, "getItem()");
         return container.getItemByIndex(position);
     }
 
     @Override
     public long getItemId(int position) {
-        Log.d(DEBUG_TAG, "getItemId()");
+        //Log.d(DEBUG_TAG, "getItemId()");
         return container.getItemByIndex(position).getId();
     }
 
     @Override
     public boolean hasStableIds() {
-        Log.d(DEBUG_TAG, "hasStableIds()");
+        //Log.d(DEBUG_TAG, "hasStableIds()");
         return true;
     }
 
@@ -91,7 +115,6 @@ public class ContainerListAdapter implements ListAdapter {
             * and take parameters of that existing views
             * */
             viewHolder = new ViewHolder();
-            viewHolder.iv_image = (ImageView)convertView.findViewById(R.id.iv_image);
             viewHolder.layout_row = (LinearLayout)convertView.findViewById(R.id.layout_row);
             viewHolder.tv_deviceName = (TextView)convertView.findViewById(R.id.tv_deviceName);
             viewHolder.tv_deviceDescription = (TextView) convertView.findViewById(R.id.tv_deviceDescription);
@@ -109,23 +132,6 @@ public class ContainerListAdapter implements ListAdapter {
             else
                 viewHolder.layout_row.setBackgroundColor(Color.GRAY);
 
-            switch(((Device) whatItem).getCategory())
-            {
-                case Device.LIGHT :
-                viewHolder.iv_image.setImageResource(R.mipmap.oc_light);
-                    break;
-                case Device.JEALOUSE :
-                    viewHolder.iv_image.setImageResource(R.mipmap.oc_jealouse);
-                    break;
-                case Device.HEATING :
-                    viewHolder.iv_image.setImageResource(R.mipmap.ic_heating);
-                    break;
-            }
-        }
-        else
-        {
-            Log.d(DEBUG_TAG, "getView() Container : " + ((Container)whatItem).getItemCount() );
-            viewHolder.tv_contents.setText(((Container) whatItem).getItemCount() + "");
         }
 
         String deviceName = container.getItemByIndex(position).getName();
@@ -139,13 +145,13 @@ public class ContainerListAdapter implements ListAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        Log.d(DEBUG_TAG, "getItemViewType()");
+        //Log.d(DEBUG_TAG, "getItemViewType()");
         return 0;
     }
 
     @Override
     public int getViewTypeCount() {
-        Log.d(DEBUG_TAG, "getViewTypeCount()");
+        //Log.d(DEBUG_TAG, "getViewTypeCount()");
         return 1;
     }
 
@@ -154,9 +160,20 @@ public class ContainerListAdapter implements ListAdapter {
         return false;
     }
 
+
+//  The method called when an item added or removed from the Container
+    @Override
+    public void onEvent(Container container, Item item) {
+        Log.d(DEBUG_TAG, "onEvent()");
+        Log.d(DEBUG_TAG, "Container : " + container.getName() + " Id : " + container.getId());
+        Log.d(DEBUG_TAG, "Item : " + item.getId());
+
+        dataSetObservable.notifyChanged();
+        Log.d(DEBUG_TAG, "dataSetObservable.notifyChanged()");
+    }
+
     private static class ViewHolder {
         public LinearLayout layout_row;
-        public ImageView iv_image;
         public TextView tv_deviceName;
         public TextView tv_deviceDescription;
         public TextView tv_contents;

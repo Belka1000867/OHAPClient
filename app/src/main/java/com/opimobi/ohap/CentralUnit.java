@@ -102,7 +102,7 @@ public abstract class CentralUnit extends Container {
         return url;
     }
 
-    public void setURL(URL ulr) {
+    public void setURL(URL url) {
         this.url = url;
     }
 
@@ -146,6 +146,8 @@ public abstract class CentralUnit extends Container {
         items.remove(item.getId());
         itemUnregisteredEventSource.fireEvent(item);
     }
+
+
 
 
 }

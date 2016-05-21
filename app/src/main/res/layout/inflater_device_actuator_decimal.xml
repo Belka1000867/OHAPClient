@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <SeekBar
+        android:id="@+id/seekBarDecimalActuator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="180dp"
+        />
+
+    <TextView
+        android:id="@+id/tvDecimalActuatorMinValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/seekBarDecimalActuator"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="27dp"
+        android:text="MinValue"
+        />
+
+    <TextView
+        android:id="@+id/tvDecimalActuatorMaxValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvDecimalActuatorMinValue"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="MaxValue"
+        />
+
+    <TextView
+        android:id="@+id/tvDecimalActuatorCurrentValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CurrentValue"
+        android:layout_above="@+id/tvDecimalActuatorMaxValue"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tvDecimalActuatorUnit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CurrentValue"
+        android:textSize="18sp"
+        android:layout_above="@+id/tvDecimalActuatorMaxValue"
+        android:layout_toRightOf="@+id/tvDecimalActuatorCurrentValue"
+        android:layout_toEndOf="@+id/tvDecimalActuatorCurrentValue" />
+
+</RelativeLayout>

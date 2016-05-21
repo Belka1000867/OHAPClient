@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.opimobi.ohap.Container;
 import com.opimobi.ohap.Item;
@@ -18,10 +17,11 @@ import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
 import fi.oulu.tol.esde009.ohapclient009.R;
-import fi.oulu.tol.esde009.ohapclient009.networking.CentralUnitConnection;
-
+import fi.oulu.tol.esde009.ohapclient009.network.CentralUnitConnection;
+import fi.oulu.tol.esde009.ohapclient009.ui.activities.ContainerActivity_;
 import fi.oulu.tol.esde009.ohapclient009.utils.AppConstants;
 import fi.oulu.tol.esde009.ohapclient009.utils.ContainerListAdapter;
+import fi.oulu.tol.esde009.ohapclient009.utils.OhapErrorListener;
 
 /**
  * Fragment with UI and logical behaviour to show the list of containers and/or devices
@@ -34,9 +34,9 @@ import fi.oulu.tol.esde009.ohapclient009.utils.ContainerListAdapter;
 @EFragment(R.layout.fragment_container)
 public class ContainerFragment extends Fragment {
 
-    OnItemSelectedListener mCallback;
+    private OnItemSelectedListener mCallback;
+    private OhapErrorListener ohapErrorListener;
 
-    private CentralUnitConnection centralUnitConnection;
     private Container mContainer;
 
     private String prefCentralUnitUrl;
@@ -61,10 +61,23 @@ public class ContainerFragment extends Fragment {
 */
     @AfterViews
     void initListContainer(){
-        getActivity().setTitle(mContainer.getName());
+        Log.d(TAG, "initListContainer()");
 
-        ContainerListAdapter containerListAdapter = new ContainerListAdapter(mContainer);
-        listViewContainer.setAdapter(containerListAdapter);
+        try {
+            Log.d(TAG, "mContainer = " + mContainer.getName() );
+            mContainer.startListening();
+            ContainerListAdapter containerListAdapter = new ContainerListAdapter(mContainer);
+            listViewContainer.setAdapter(containerListAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            getActivity().setTitle(mContainer.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        getActivity().setTitle("Container Fragment" + ContainerActivity_.fragment);
     }
 
 /*
@@ -73,8 +86,10 @@ public class ContainerFragment extends Fragment {
     @ItemClick(R.id.listView_container)
     void launchNext(Item item){
         Log.d(TAG, "launchNext()");
+
+        //Create bundle as arguments for new fragment
         Bundle args = new Bundle();
-        args.putString(AppConstants.EXTRA_CENTRAL_UNIT_URL, finalCentralUnitUrl);
+        args.putString(AppConstants.EXTRA_SERVER_ADDRESS_URL, finalCentralUnitUrl);
         args.putLong(AppConstants.EXTRA_ITEM_ID, item.getId());
 
         // Request Activity to change the fragment
@@ -86,21 +101,24 @@ public class ContainerFragment extends Fragment {
         super.onAttach(context);
         Log.d(TAG, "onAttach()");
 
+//      Check that activity that start fragment implements listener interface
         try {
             mCallback = (OnItemSelectedListener) context;
+            ohapErrorListener = (OhapErrorListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnItemSelectedListener");
+            Log.d(TAG, "ClassCastException" + e.getMessage());
         }
 /*
-*       Setting the preferences
+*       Setting application preferences
 */
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         /*
         * Get url of the central unit from the settings
         * */
         prefCentralUnitUrl = sharedPreferences.getString(SettingsFragment.SERVER_ADDRESS, "");
+        Log.d(TAG, "prefCentralUnitUrl  " + prefCentralUnitUrl);
 
+//      If server address is not defined by the user than open settings for him
         if(prefCentralUnitUrl.isEmpty()){
             Log.d(TAG, "URL from preferences is empty");
             getFragmentManager()
@@ -108,7 +126,8 @@ public class ContainerFragment extends Fragment {
                     .replace(R.id.container_fragment, new SettingsFragment_(), "Settings")
                     .addToBackStack(null)
                     .commit();
-            Toast.makeText(getActivity(), R.string.error_message_server_address, Toast.LENGTH_LONG).show();
+
+            ohapErrorListener.handleError(R.string.error_message_server_address);
             return;
         }
 
@@ -116,36 +135,37 @@ public class ContainerFragment extends Fragment {
     }
 
     private void establishConnection(){
-        String argCentralUnitUrl = null;
+
+        String argServerAddressUrl = null;
         Long argContainerId = null;
-        try {
+        Bundle arguments = getArguments();
         /*
         Get central unit url and ID from bundle arguments of the fragment
+        If there is some data send to the fragment
         */
-            argCentralUnitUrl = getArguments().getString(AppConstants.EXTRA_CENTRAL_UNIT_URL);
-            argContainerId = getArguments().getLong(AppConstants.EXTRA_ITEM_ID);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(arguments != null){
+            argServerAddressUrl = arguments.getString(AppConstants.EXTRA_SERVER_ADDRESS_URL);
+            argContainerId = arguments.getLong(AppConstants.EXTRA_ITEM_ID);
         }
 
         /*
         For the first instantiation of the class arguments will not be used and argCentralUnitUrl will be null
         Than need to get URL from preferences
         */
-        finalCentralUnitUrl = argCentralUnitUrl != null ? argCentralUnitUrl : prefCentralUnitUrl;
+        finalCentralUnitUrl = argServerAddressUrl != null ? argServerAddressUrl : prefCentralUnitUrl;
         Log.d(TAG, "finalCentralUnitUrl  " + finalCentralUnitUrl);
 
 
-        centralUnitConnection = CentralUnitConnection.getInstance();
-        Log.d(TAG, "centralUnitConnection  " + centralUnitConnection.getName());
+        CentralUnitConnection mCentralUnitConnection = CentralUnitConnection.getInstance();
+        Log.d(TAG, "centralUnitConnection  " + mCentralUnitConnection.getName());
 
         /*
         for the first instantiation of the class Intent will not be used and ID will be null
         if id is null than it is parent container
         */
-        final Long containerId = argContainerId != null ? argContainerId : centralUnitConnection.getId();
-        mContainer = (Container) centralUnitConnection.getItemById(containerId);
-
+        final long containerId = argContainerId != null ? argContainerId : mCentralUnitConnection.getId();
+        Log.d(TAG, "centralUnitConnection  " + mCentralUnitConnection.getId());
+        mContainer = (Container) mCentralUnitConnection.getItemById(containerId);
     }
 
 

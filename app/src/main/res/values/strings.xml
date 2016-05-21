@@ -1,16 +1,56 @@
 <resources>
     <string name="app_name">OHAP Client 009</string>
-    <string name="action_settings">Settings</string>
+    <!--OverFlow menu items-->
+    <string name="menu.item.settings">Settings</string>
+    <string name="menu.item.ping">Ping</string>
+
     <string name="error.message.server.address">Please, set url to connect to server.</string>
-    <string name="error.message.socket.connection">Problem connecting to the server.</string>
-    <string name="error.message.socket.connection.lost">Connection with the server lost.</string>
-    <string name="error.message.no.connection">No internet connection.</string>
+    <string name="error.message.wrong.server.address">Wrong server address</string>
+    <string name="error.message.socket.connection">Failed to connect to the server</string>
+    <string name="error.message.socket.connection.lost">Connection with server was lost</string>
+    <string name="error.message.no.connection">No internet connection</string>
 
-    <string name="title.preferences.autoconnection">Connect automatically to the server.</string>
+    <!--AlertDialog messages-->
+    <string name="dialog.message.again">Try again?</string>
+    <string name="dialog.message.reconnect">Try to reconnect?</string>
+    <string name="dialog.message.no.connection">Please connect to the Internet to continue and try again</string>
+    <string name="dialog.message.enter.server.address">Edit server address</string>
+
+    <!--AlertDialog button titles-->
+    <string name="dialog.button.positive">yes</string>
+    <string name="dialog.button.ok">yes</string>
+    <string name="dialog.button.negative">no</string>
+
+    <!--Preferences-->
+    <!--Titles-->
+    <string name="title.preferences.autoconnection">Connect automatically to server.</string>
+    <string name="title.preferences.server.address">Server address</string>
+    <!--Texts-->
     <string name="text.preferences.autoconnection">Connect automatically</string>
+    <string name="text.preferences.server.address">Enter server address</string>
+    <!--Default values-->
+    <string name="default.preferences.server.address">http://10.0.3.2:18001/</string>
+    <!--End Of Preferences-->
 
-    <string name="central_unit_url_from_user">Central unit URL</string>
-    <string name="enter_central_unit_url">Enter url to connect to Central Unit</string>
-    <string name="celsius">\u2103</string>
-    <string name="preferences.default.server.address">http://ohap.opimobi.com:8080/</string>
+    <!--Incoming Messages from server-->
+    <string name="incomingmessage.pong">Pong returned from server.</string>
+    <string name="incomingmessage.logout">Client suddenly logout.</string>
+
+    <!--Tags for FragmentLayout-->
+    <string name="tag.container.fragment">ContainerFragment</string>
+    <string name="tag.container.device">DeviceFragment</string>
+
+    <string name="app.exit">Press Back one more time if you want to close an application</string>
+
+
+    <!--Device Inflaters-->
+    <string name="text.device.condition.on">Working</string>
+    <string name="text.device.condition.off">Does not work</string>
+    
+    <!--Unit Abbreviation-->
+    <string name="device.abbreviation.celsius">Celsius</string>
+    <string name="device.abbreviation.fahrenheit">Fahrenheit</string>
+    <string name="device.unit.celsius">\\u2103</string>
+    <string name="device.unit.fahrenheit">\u2109</string>
+
 </resources>

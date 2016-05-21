@@ -62,14 +62,14 @@ public class Container extends Item {
      */
     public Container(Container parent, long id) {
         super(parent, id);
-        Log.d(DEBUG_TAG, "Container(Container parent, long id)");
+        Log.d(DEBUG_TAG, "Container(Container parent " + parent.getName() + " , long id)");
     }
 
     /**
      * An implantation-only constructor that is used to initialise a central unit.
      */
     protected Container() {
-        Log.d(DEBUG_TAG, "Container()");
+        Log.d(DEBUG_TAG, "Container() Initialisation of a central unit");
     }
 
     /**
@@ -79,6 +79,7 @@ public class Container extends Item {
      */
     @Override
     public void destroy() {
+        Log.d(DEBUG_TAG, "destroy()");
         while (items.size() > 0)
             items.get(items.size() - 1).destroy();
 
@@ -91,7 +92,7 @@ public class Container extends Item {
      * @return The number of items in the container.
      */
     public int getItemCount() {
-        Log.d(DEBUG_TAG, "getItemCount()");
+        //Log.d(DEBUG_TAG, "getItemCount()");
         return items.size();
     }
 
@@ -102,7 +103,7 @@ public class Container extends Item {
      * @return The child item.
      */
     public Item getItemByIndex(int index) {
-        Log.d(DEBUG_TAG, "getItemByIndex()");
+        //Log.d(DEBUG_TAG, "getItemByIndex()");
         return items.get(index);
     }
 
@@ -126,6 +127,8 @@ public class Container extends Item {
         listeners++;
         if (listeners == 1)
             getCentralUnit().listeningStateChanged(this, true);
+
+        Log.d(DEBUG_TAG, "listeners = " + listeners);
     }
 
     /**
@@ -159,7 +162,7 @@ public class Container extends Item {
      * @param item The item to be added into the container.
      */
     void add(Item item) {
-        Log.d(DEBUG_TAG, "add()");
+        Log.d(DEBUG_TAG, "add() item : " + item.getName());
         items.add(item);
         itemAddedEventSource.fireEvent(item);
     }
@@ -172,6 +175,7 @@ public class Container extends Item {
      * @param item The item to be removed from the container.
      */
     void remove(Item item) {
+        Log.d(DEBUG_TAG, "remove() item : " + item.getName());
         items.remove(item);
         itemRemovedEventSource.fireEvent(item);
     }
