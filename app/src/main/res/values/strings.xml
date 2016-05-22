@@ -46,11 +46,13 @@
     <!--Device Inflaters-->
     <string name="text.device.condition.on">Working</string>
     <string name="text.device.condition.off">Does not work</string>
-    
+
+    <!--Button text for Decimal Actuator Device-->
+    <string name="text.button.increase.one">+1 </string>
+    <string name="text.button.decrease.one">-1 </string>
+    <string name="text.button.increase.half">+0,5 </string>
+    <string name="text.button.decrease.half">-0,5 </string>
     <!--Unit Abbreviation-->
-    <string name="device.abbreviation.celsius">Celsius</string>
-    <string name="device.abbreviation.fahrenheit">Fahrenheit</string>
-    <string name="device.unit.celsius">\\u2103</string>
-    <string name="device.unit.fahrenheit">\u2109</string>
+
 
 </resources>

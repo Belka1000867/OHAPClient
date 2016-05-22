@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -167,6 +168,11 @@ public class DeviceFragment extends Fragment {
         TextView tvCurrentValue = (TextView) mInflaterView.findViewById(R.id.tvDecimalActuatorCurrentValue);
         TextView tvUnit = (TextView) mInflaterView.findViewById(R.id.tvDecimalActuatorUnit);
 
+        Button bIncreaseOne = (Button) mInflaterView.findViewById(R.id.butIncreaseOne);
+        Button bDecreaseOne = (Button) mInflaterView.findViewById(R.id.butDecreaseOne);
+        Button bIncreaseHalf = (Button) mInflaterView.findViewById(R.id.butIncreaseHalf);
+        Button bDecreaseHalf = (Button) mInflaterView.findViewById(R.id.butDecreaseHalf);
+
         // Device values
         // Count interval between minimal and maximum values
         final double minValDouble = mDevice.getMinValue();
@@ -192,7 +198,18 @@ public class DeviceFragment extends Fragment {
         tvMinValue.setText(String.valueOf(minValDouble));
         tvMaxValue.setText(String.valueOf(maxValDouble));
 //      Set device UNIT to TextView
-        tvUnit.setText(chooseUnit());
+        String unit = chooseUnit();
+        tvUnit.setText(unit);
+        String textButIncreaseOne = getString(R.string.text_button_increase_one) + unit;
+        String textButDecreaseOne = getString(R.string.text_button_decrease_one) + unit;
+        String textButIncreaseHalf = getString(R.string.text_button_increase_half) + unit;
+        String textButDecreaseHalf = getString(R.string.text_button_decrease_half) + unit;
+//      Set text for buttons
+        bIncreaseOne.setText(textButIncreaseOne);
+        bDecreaseOne.setText(textButDecreaseOne);
+        bIncreaseHalf.setText(textButIncreaseHalf);
+        bDecreaseHalf.setText(textButDecreaseHalf);
+
 //      Show device current value
         tvCurrentValue.setText(decimalFormat.format(curValDouble));
 //      Set current position on the seekBar
@@ -200,20 +217,28 @@ public class DeviceFragment extends Fragment {
         Log.d(TAG, "Position : " + curPosition);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            double value;
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // get decimal value of progress in format #.#
+
                 double progressDouble = (double) progress / TICK;
-                // value depending from the 'zero' of seekBar
-                //double curProgress = maxValDouble - progressDouble;
+                // value depending from the 'zero' of seekBar if the interval start from negative number
                 // set current value as 'zero' of the seekBar + current position in decimal format
-                //double fromZero = curProgress - positionZeroDouble;
-                double value = positionZeroDouble == intervalDouble/2 ? progressDouble - maxValDouble : progressDouble;
+
+                /*
+                *
+                *  WARNING ! Solution is only suitable for intervals :
+                *  1) start from 0 ; example [0;28]
+                *  2) with equal volumes to both sides from 'zero' [-50; 50]
+                *
+                * */
+                value = positionZeroDouble == intervalDouble / 2 ? progressDouble - maxValDouble : progressDouble;
+                // get decimal value of progress in format #.#
                 String valueDecFormat = decimalFormat.format(value);
 
                 tvCurrentValue.setText(valueDecFormat);
-                Log.d(TAG, "ProgressDouble: " + progressDouble); //68.3
-                Log.d(TAG, "positionZeroDouble: " + positionZeroDouble);
             }
 
             @Override
@@ -223,15 +248,87 @@ public class DeviceFragment extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                double valueNoNegative = (double) seekBar.getProgress() / TICK;
-                double valueEqualInterval = maxValDouble - valueNoNegative;
-
-                double decimalValue = positionZeroDouble == intervalDouble/2 ? valueEqualInterval : valueNoNegative;
-                mDevice.changeDecimalValue(decimalValue);
-                Log.d(TAG, " SEND Progress :" + decimalValue);
+                double decimalValueFloor = Math.floor(value * 10) / 10;
+                mDevice.changeDecimalValue(decimalValueFloor);
+                Log.d(TAG, " SEND Progress :" + value);
             }
         });
 
+        /*
+        *  Functionality for buttons
+        * */
+
+        /*
+        *
+        *  WARNING ! Solution is only suitable for intervals :
+        *  1) start from 0 ; example [0;28]
+        *  2) with equal volumes to both sides from 'zero' [-50; 50]
+        *
+        * */
+
+        bIncreaseOne.setOnClickListener(v -> {
+            int newPosition = seekBar.getProgress() + TICK;
+            double decimalPosition = (double) newPosition / TICK;
+
+            double decimalValue = positionZeroDouble == intervalDouble / 2 ? decimalPosition - maxValDouble : decimalPosition;
+
+            Log.d(TAG, "Position : " + newPosition);
+            Log.d(TAG, "decimalPosition : " + decimalPosition);
+            Log.d(TAG, "decimalPosition - maxValDouble : " + (decimalPosition - maxValDouble));
+            Log.d(TAG, "decimalValue : " + decimalValue);
+
+//           New value should not be more than max position when increasing
+            if(decimalValue <= maxValDouble) {
+                seekBar.setProgress(newPosition);
+                tvCurrentValue.setText(decimalFormat.format(decimalValue));
+//              Format the number '#.#########' to the view of '#.#'
+                double decimalValueFloor = Math.floor(decimalValue * 10) / 10;
+                mDevice.changeDecimalValue(decimalValueFloor);
+            }
+        });
+
+        bDecreaseOne.setOnClickListener(v -> {
+            int newPosition = seekBar.getProgress() - TICK;
+            double decimalPosition = (double) newPosition / TICK;
+
+            double decimalValue = positionZeroDouble == intervalDouble / 2 ? decimalPosition - maxValDouble : decimalPosition;
+
+            if(decimalValue >= minValDouble) {
+                seekBar.setProgress(newPosition);
+                tvCurrentValue.setText(decimalFormat.format(decimalValue));
+//              Format the number '#.#########' to the view of '#.#'
+                double decimalValueFloor = Math.floor(decimalValue * 10) / 10;
+                mDevice.changeDecimalValue(decimalValueFloor);
+            }
+        });
+
+        bIncreaseHalf.setOnClickListener(v -> {
+            int newPosition = seekBar.getProgress() + TICK/2;
+            double decimalPosition = (double) newPosition / TICK;
+            double decimalValue = positionZeroDouble == intervalDouble / 2 ? decimalPosition - maxValDouble : decimalPosition;
+
+            if(decimalValue <= maxValDouble) {
+                seekBar.setProgress(newPosition);
+                tvCurrentValue.setText(decimalFormat.format(decimalValue));
+//              Format the number '#.#########' to the view of '#.#'
+                double decimalValueFloor = Math.floor(decimalValue * 10) / 10;
+                mDevice.changeDecimalValue(decimalValueFloor);
+            }
+        });
+
+        bDecreaseHalf.setOnClickListener(v -> {
+            int newPosition = seekBar.getProgress() - TICK/2;
+            double decimalPosition = (double) newPosition / TICK;
+            double decimalValue = positionZeroDouble == intervalDouble / 2 ? decimalPosition - maxValDouble : decimalPosition;
+
+            if(decimalValue >= minValDouble) {
+                seekBar.setProgress(newPosition);
+                tvCurrentValue.setText(decimalFormat.format(decimalValue));
+//              Format the number '#.#########' to the view of '#.#'
+                double decimalValueFloor = Math.floor(decimalValue * 10) / 10;
+                mDevice.changeDecimalValue(decimalValueFloor);
+            }
+        });
 
     }
 

@@ -54,4 +54,45 @@
         android:layout_toRightOf="@+id/tvDecimalActuatorCurrentValue"
         android:layout_toEndOf="@+id/tvDecimalActuatorCurrentValue" />
 
+    <Button
+        android:id="@+id/butIncreaseOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="87dp"
+        android:layout_below="@+id/seekBarDecimalActuator"
+        android:layout_toRightOf="@+id/tvDecimalActuatorMinValue"
+        android:layout_toEndOf="@+id/tvDecimalActuatorMinValue"
+        android:layout_marginLeft="42dp"
+        android:layout_marginStart="42dp"
+        android:text="+1"
+        />
+
+    <Button
+        android:id="@+id/butDecreaseOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-1"
+        android:layout_below="@+id/butIncreaseOne"
+        android:layout_alignLeft="@+id/butIncreaseOne"
+        android:layout_alignStart="@+id/butIncreaseOne" />
+
+    <Button
+        android:id="@+id/butIncreaseHalf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+0,5"
+        android:layout_above="@+id/butDecreaseHalf"
+        android:layout_toLeftOf="@+id/tvDecimalActuatorMaxValue"
+        android:layout_toStartOf="@+id/tvDecimalActuatorMaxValue" />
+
+    <Button
+        android:id="@+id/butDecreaseHalf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/butDecreaseOne"
+        android:layout_alignLeft="@+id/butIncreaseHalf"
+        android:layout_alignStart="@+id/butIncreaseHalf"
+        android:text="-0,5"
+        />
+
 </RelativeLayout>
